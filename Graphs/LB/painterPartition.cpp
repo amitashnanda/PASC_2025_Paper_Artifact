@@ -136,21 +136,20 @@ long  findMax(vector<long> wgts, int n, int k)
 	 
 	return dp[k][n]; 
 } 
-bool isPartitionPossible(vector<long> wgts, int n, int k, long maxTime){
+bool isPartitionPossible(vector<long> wgts, int n, int number_of_ranks, long maxWeight){
         
-        long long currTime=0, worker=1;
+        long long currWeight=0, worker=1;
         for(int i=0;i<n;i++)
         {
-            if(currTime+wgts[i]>maxTime){
+            if(currWeight+wgts[i]>maxWeight){
                 worker++;
                 
-                if(worker>k) return false;
-                currTime=wgts[i];
+                if(worker>number_of_ranks) return false;
+                currWeight=wgts[i];
             }
-            else currTime+=wgts[i];
+            else currWeight=wgts[i];
         }
-        return true;
-        
+        return true;   
     }
 long minWeight(vector<long> wgts, int n, int k)
     {
@@ -180,7 +179,7 @@ long minWeight(vector<long> wgts, int n, int k)
     }
 
 // driver function 
- vector<int> painterPartition(const amrex::BoxArray&   boxes,vector<long> wgts,int k) 
+ vector<int> painterPartition(const amrex::BoxArray&   boxes,vector<long> wgts,int number_of_ranks) 
 { 
 
 	BL_PROFILE("painterPartition()");
@@ -205,23 +204,19 @@ long minWeight(vector<long> wgts, int n, int k)
 
 	long int n=wgts.size();
 
-    // for (int i = 0; i < N; ++i)
-	// 	{
-	// 		amrex::Print() << wgts[i] <<" " <<sorted_wgts[i]<<" \n";
-    //     }
-	//int k = 2; 
-	long maxVal=minWeight(sorted_wgts,n,k);
+    
+	long maxVal=minWeight(sorted_wgts,n,number_of_ranks);
 	//cout << maxVal << endl; 
-	vector< vector<int> > vec(k);
+	vector< vector<int> > vec(number_of_ranks);
     vector<int> sorted_result(wgts.size());
 	int index;
 	
     
 	amrex::Real  s_painter_eff=0.0;
 	bool sort=true;
-	int nteams=k;
+	int nteams=number_of_ranks;
 	bool  flag_verbose_mapper=true;
-	for(int i=0,j=i, p=0;p<k && j<n;p++){
+	for(int i=0,j=i, p=0;p<number_of_ranks && j<n;p++){
 		
 		long val=sum(sorted_wgts,i,j);
 		while(maxVal>val && j<n){
@@ -259,22 +254,7 @@ long minWeight(vector<long> wgts, int n, int k)
             result[tokens[i].m_box] = sorted_result[i];
             // amrex::Print() << tokens[i].m_morton[0] << " " << tokens[i].m_morton[1] << " " << tokens[i].m_morton[2] << " \n";
         }
-    // amrex::Print()<<"----------------result\n";
-    // for (int j = 0; j < N; ++j) {
-    //     amrex::Print()<<wgts[j]<<" , "<<result[j]<<" ";
     
-    // }
-    // amrex::Print()<<"----------------\n";
-    // for (int j = 0; j < N; ++j) {
-       
-    //     amrex::Print()<<sorted_wgts[j]<<" , "<<sorted_result[j]<<" ";
-    // }
-	// for(int i=0;i<k;i++){
-    //     for(int j=0;j<vec[i].size();j++){
-	// 		cout<<"vec["<<i<<"]["<<j<<"]="<<vec[i][j]<<endl;
-	// 	}
-	// 	cout<<endl;
-	// }
 
 	std::vector<LIpair> LIpairV;
 
