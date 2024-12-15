@@ -31,27 +31,26 @@ equations (PDEs).
 ```
 PASC_2025_Paper_Artifact
 │
-└───bin
+└─── notebooks
+│        │ 
+│        └───metrics_calculation_avg.ipynb
+│        └───metrics_calculation_best.ipynb
+│        └───metrics_calculation_worst.ipynb
+│        └───sfc_knapsack_plot.py
 └───output
 └───result
 └───src
-    │ 
-    └───BruteForce.cpp
-    └───SFC.cpp/SFC.H
-    └───SFC_knapsack.cpp/SFC_knapsack.H
-    └───Knapsack.cpp/Knapsack.H
-    └───PainterPartition.cpp/PainterPartition.H
-    └───main.cpp
-    └─── notebooks
-         │ 
-         └───metrics_calculation_avg.ipynb
-         └───metrics_calculation_best.ipynb
-         └───metrics_calculation_worst.ipynb
-         └───sfc_knapsack_plot.py
-    
+│    │ 
+│    └───bruteForce.cpp
+│    └───SFC.cpp/SFC.H
+│    └───SFC_knapsack.cpp/SFC_knapsack.H
+│    └───Knapsack.cpp/Knapsack.H
+│    └───PainterPartition.cpp/PainterPartition.H
+│    └───main.cpp 
+     └───Make.package     
+│     
 └───GNUmakefile
 └───LICENSE
-└───Make.package
 └───experiment.sh
 └───inputs
 └───requirements.yaml
