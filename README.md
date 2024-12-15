@@ -138,6 +138,14 @@ These instructions will get you a copy of the project up and running on your loc
 
    ```
 
+4. Running a bash file through jobs on perlmutter
+
+   ```
+   sbatch run.sh 
+
+   ```
+
+
 ## **Contributing**
 
 1. Fork the Repository:
