@@ -47,9 +47,9 @@ PASC_2025_Paper_Artifact
 │    └───Knapsack.cpp/Knapsack.H
 │    └───PainterPartition.cpp/PainterPartition.H
 │    └───main.cpp 
-     └───Make.package     
+│    └───Make.package  
+│    └───GNUmakefile   
 │     
-└───GNUmakefile
 └───LICENSE
 └───experiment.sh
 └───inputs
