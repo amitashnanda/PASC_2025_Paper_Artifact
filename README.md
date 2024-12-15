@@ -187,6 +187,8 @@ This project is licensed under the [Apache License](LICENSE).
 2. **Perlmutter Supercomputer**
 3. **Lawrence Berkeley National Laboratory**
 4. **National Energy Research Scientific Computing Center**
+5. **University of California San Diego (Boolean Lab)**
+6. **The University of Alabama**
 
 
 
