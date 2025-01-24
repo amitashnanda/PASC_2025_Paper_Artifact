@@ -1,6 +1,4 @@
 
-
-
 #include <AMReX.H>
 #include <AMReX_Random.H>
 #include <AMReX_MultiFab.H>
@@ -15,11 +13,13 @@
 #include <numeric>
 #include <cassert>
 
-#include <Util.H>
-#include <Knapsack.H>
-#include <SFC.H>
-#include <SFC_knapsack.H>
-#include<painterPartition.H>
+
+#include "Util.H"
+#include "Knapsack.H"
+#include "SFC.H"
+#include "SFC_knapsack.H"
+#include "painterPartition.H"
+
 
 #if defined(AMREX_USE_MPI) || defined(AMREX_USE_GPU)
 #error This is a serial test only.
@@ -122,19 +122,23 @@ for (int r = 0; r<nruns; r++) {
 
     time_start = amrex::second();
     std::vector<int> k_dmap = KnapSackDoIt(scaled_wgts, nnodes, k_eff, true, nmax, true, false, bytes);
-    amrex::Print()<<" Final Knapsack time: " << amrex::second() - time_start << std::endl;
+    amrex::Print()<<" Final Knapsack time: " << amrex::second() - time_start << std::endl<<std::endl;
 
     time_start = amrex::second();
     std::vector<int> s_dmap = SFCProcessorMapDoIt(ba, scaled_wgts, nnodes, &s_eff, node_size, true, false, bytes);
-    amrex::Print()<<" Final SFC time: " << amrex::second() - time_start << std::endl;
+    amrex::Print()<<" Final SFC time: " << amrex::second() - time_start << std::endl<<std::endl;
 
     time_start = amrex::second();
     std::vector<int> vec=painterPartition(ba,scaled_wgts,nnodes);
-    amrex::Print()<<" Final SFC+Painter time: " << amrex::second() - time_start << std::endl;
+    amrex::Print()<<" Final SFC+Painter time: " << amrex::second() - time_start << std::endl<<std::endl;
 
     time_start = amrex::second();
     std::vector<int> sfc_knapsack_dmap = SFCProcessorMapDoItCombined(ba, scaled_wgts, nnodes, ranks_per_node, &sfc_eff, &knapsack_eff, true, false, bytes);
-    amrex::Print()<<" Final SFC+Knapsack_Combined time: " << amrex::second() - time_start << std::endl;
+    amrex::Print()<<" Final SFC+Knapsack_Combined time: " << amrex::second() - time_start << std::endl<<std::endl;
+    
+    time_start = amrex::second();
+    std::vector<int> painter_knapsack_dmap = SFCProcessorMapDoItCombinedPainter(ba, scaled_wgts, nnodes, ranks_per_node, &sfc_eff, &knapsack_eff, true, false, bytes);
+    amrex::Print()<<" Final painter+Knapsack_Combined time: " << amrex::second() - time_start << std::endl;
 
     amrex::Print() << "\n=== End of Run " << r + 1 << " ===\n";
     amrex::Print() << "======================================\n\n";

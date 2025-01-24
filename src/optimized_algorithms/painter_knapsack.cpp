@@ -8,11 +8,13 @@
 #include "Knapsack.H"
 #include "LeastUsed.H"
 #include "SFC_knapsack.H"
+#include "painterPartition.H"
+
 
 
 // Define the SFC and Knapsack functions here
 std::vector<int>
-SFCProcessorMapDoItCombined (const amrex::BoxArray&          boxes,
+SFCProcessorMapDoItCombinedPainter (const amrex::BoxArray&          boxes,
                      const std::vector<amrex::Long>& wgts,
                      int                             nnodes,
                      int                             ranks_per_node,
@@ -24,10 +26,10 @@ SFCProcessorMapDoItCombined (const amrex::BoxArray&          boxes,
 
 {
     if (flag_verbose_mapper) {
-        amrex::Print() << "DM: SFCProcessorMapDoItCombined called..." << std::endl;
+        amrex::Print() << "DM: SFCProcessorMapDoItCombinedPainter called..." << std::endl;
     }
 
-    BL_PROFILE("SFCProcessorMapDoItCombined()");
+    BL_PROFILE("SFCProcessorMapDoItCombinedPainter()");
 
     // RUN SFC with "node" number of bins 
 
@@ -49,40 +51,39 @@ SFCProcessorMapDoItCombined (const amrex::BoxArray&          boxes,
 //         }
 //     } 
 // #endif
-    if (flag_verbose_mapper) {
-        amrex::Print() << "  (nnodes, nteams, ranks_per_node) = ("
-                       << nnodes << ", " << nteams << ", " << ranks_per_node << ")\n";
-    }
+    // if (flag_verbose_mapper) {
+    //     amrex::Print() << "  (nnodes, nteams, ranks_per_node) = ("
+    //                    << nnodes << ", " << nteams << ", " << ranks_per_node << ")\n";
+    // }
 
     const int N = boxes.size();
-    std::vector<SFCToken> tokens;
-    tokens.reserve(N);
-    for (int i = 0; i < N; ++i) {
-        const amrex::Box& bx = boxes[i];
-        tokens.push_back(makeSFCToken(i, bx.smallEnd()));
-    }
+    // std::vector<SFCToken> tokens;
+    // tokens.reserve(N);
+    // for (int i = 0; i < N; ++i) {
+    //     const amrex::Box& bx = boxes[i];
+    //     tokens.push_back(makeSFCToken(i, bx.smallEnd()));
+    // }
 
 
-    //
-    // Put'm in Morton space filling curve order.
-    //
-    std::sort(tokens.begin(), tokens.end(), SFCToken::Compare());
-    //
-    // Split'm up as equitably as possible per team.
-    //
-    amrex::Real volperteam = 0;
-    for (amrex::Long wt : wgts) {
-        volperteam += wt;
-    }
-    volperteam /= nteams;
+    // //
+    // // Put'm in Morton space filling curve order.
+    // //
+    // std::sort(tokens.begin(), tokens.end(), SFCToken::Compare());
+    // //
+    // // Split'm up as equitably as possible per team.
+    // //
+    // amrex::Real volperteam = 0;
+    // for (amrex::Long wt : wgts) {
+    //     volperteam += wt;
+    // }
+    // volperteam /= nteams;
 
     std::vector<std::vector<int>> vec(nteams);
 
-    Distribute(tokens, wgts, nteams, volperteam, vec, flag_verbose_mapper); //// calling SFC 1
-
-/////
-    // amrex::Print()<<"Printing SFC vec" << "\n"; 
-
+    //Distribute(tokens, wgts, nteams, volperteam, vec, flag_verbose_mapper); //// calling SFC 1
+    vec=painterPartition_VecVec(boxes,wgts,nteams);
+    /////
+    // amrex::Print()<<"Printing SFC vec" << "\n";
 
     // for (int i = 0; i < vec.size(); ++i)
     // {
@@ -130,7 +131,7 @@ SFCProcessorMapDoItCombined (const amrex::BoxArray&          boxes,
 
     // vec has a size of nteams and vec[] holds a vector of box ids.
 
-    tokens.clear();
+    //tokens.clear();
 
     std::vector<LIpair> LIpairV;
     LIpairV.reserve(nteams);
@@ -363,8 +364,8 @@ SFCProcessorMapDoItCombined (const amrex::BoxArray&          boxes,
 
 
     if (flag_verbose_mapper) {
-        amrex::Print() << "SFC efficiency for combined algorithm: " << *sfc_eff << '\n';
-        amrex::Print() << "SFC+Knapsack combined efficiency: " << *knapsack_eff << '\n';
+        amrex::Print() << "SFC[painter] efficiency for combined algorithm: " << *sfc_eff << '\n';
+        amrex::Print() << "Painter+Knapsack combined efficiency: " << *knapsack_eff << '\n';
     }
 
 

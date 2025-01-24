@@ -7,9 +7,9 @@
 #include <AMReX_Print.H>
 #include <AMReX_ParallelContext.H>
 
-#include <SFC.H>
-#include <Knapsack.H>
-#include <LeastUsed.H>
+#include "SFC.H"
+#include "Knapsack.H"
+#include "LeastUsed.H"
 
 
 

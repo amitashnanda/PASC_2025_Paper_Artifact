@@ -6,8 +6,8 @@
 #include <AMReX_ParallelContext.H>
 #include <AMReX_ParallelReduce.H>
 
-#include <Knapsack.H>
-#include <LeastUsed.H>
+#include "Knapsack.H"
+#include "LeastUsed.H"
 
 #include <queue>
 #include <vector>

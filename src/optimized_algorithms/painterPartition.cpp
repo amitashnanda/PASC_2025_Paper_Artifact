@@ -147,7 +147,7 @@ bool isPartitionPossible(vector<long> wgts, int n, int number_of_ranks, long max
                 if(worker>number_of_ranks) return false;
                 currWeight=wgts[i];
             }
-            else currWeight=wgts[i];
+            else currWeight+=wgts[i];
         }
         return true;   
     }
@@ -300,4 +300,78 @@ long minWeight(vector<long> wgts, int n, int k)
     }
      
 	return result;
+} 
+vector< vector<int> > painterPartition_VecVec(const amrex::BoxArray&   boxes,vector<long> wgts,int number_of_ranks) 
+{ 
+
+	BL_PROFILE("painterPartition_combined()");
+    vector<long> sorted_wgts;
+	
+	const int N = boxes.size();
+    std::vector<SFCToken> tokens;
+    tokens.reserve(N);
+    for (int i = 0; i < N; ++i)
+    {
+        const amrex::Box& bx = boxes[i];
+        tokens.push_back(makeSFCToken(i, bx.smallEnd()));
+    }
+
+	std::sort(tokens.begin(), tokens.end(), SFCToken::Compare());
+	for (int i = 0; i < N; ++i)
+		{
+			// amrex::Print() << tokens[i].m_box << " \n";
+            sorted_wgts.push_back(wgts[tokens[i].m_box]);
+            // amrex::Print() << tokens[i].m_morton[0] << " " << tokens[i].m_morton[1] << " " << tokens[i].m_morton[2] << " \n";
+        }
+
+	long int n=wgts.size();
+
+    
+	long maxVal=minWeight(sorted_wgts,n,number_of_ranks);
+	//cout << maxVal << endl; 
+	vector< vector<int> > vec(number_of_ranks);
+    vector<int> sorted_result(wgts.size());
+	int index;
+	
+    
+	amrex::Real  s_painter_eff=0.0;
+	bool sort=true;
+	int nteams=number_of_ranks;
+	bool  flag_verbose_mapper=true;
+	for(int i=0,j=i, p=0;p<number_of_ranks && j<n;p++){
+		
+		long val=sum(sorted_wgts,i,j);
+		while(maxVal>val && j<n){
+			j++;
+			val=sum(sorted_wgts,i,j);
+		}
+		// cout<<"i= "<<i<<" j= "<<j<<endl;
+		if(maxVal==val){
+			for(int a=i;a<=j;a++){
+				index=a;
+				vec[p].push_back(index);
+                //cout<<"p="<<p<<endl;
+                sorted_result[index]=p;
+            }
+            j++;
+			i=j;
+		}
+		else{
+			for(int a=i;a<j;a++){
+				index=a;
+				vec[p].push_back(index);
+               // cout<<"p="<<p<<endl;
+                sorted_result[index]=p;
+			}
+			i=j;
+		}
+
+	}
+//    for(int i=0;i<nteams;i++){
+//         for(int j=0;j<vec[i].size();j++){
+// 			cout<<"vec["<<i<<"]["<<j<<"]="<<vec[i][j]<<endl;
+// 		}
+// 		cout<<endl;
+// 	}
+   return vec;
 } 
