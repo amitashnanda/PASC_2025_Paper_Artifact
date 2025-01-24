@@ -1,22 +1,31 @@
 # Exploring Dynamic Load Balancing Algorithms for Block-Structured Mesh-and-Particle Simulations in AMReX
 
-## **Abstract**
 
-Load balancing is a critical requirement for successful large-scale HPC simulations. However, traditional load-balancing strategies have competing limitations. In this research, we explore dynamic novel hybrid load balancing algorithms, starting with Bruteforce and then Knapsack and SFC, and then combining both Knapsack and SFC and SFC Painter Partition. The result stated that the Painter SFC method is the optimal algorithm for real-world applications. Initial investigations into building this algorithm are outlined as the first steps toward applying this novel algorithm to a WarpX simulation.
 
-## **Background**
+## **Introduction**
 
-**What is AMReX**
+
+**Submitted to "The Platform for Advanced Scientific Computing (PASC) Conference"**
+
+This is the reproducibility artifact four our submitted paper. It includes our developed algorithms along with the AMReX framework. 
+
+<!-- ## **Abstract** -->
+
+<!-- Load balancing is a critical requirement for successful large-scale HPC simulations. However, traditional load-balancing strategies have competing limitations. In this research, we explore dynamic novel hybrid load balancing algorithms, starting with Bruteforce and then Knapsack and SFC, and then combining both Knapsack and SFC and SFC Painter Partition. The result stated that the Painter SFC method is the optimal algorithm for real-world applications. Initial investigations into building this algorithm are outlined as the first steps toward applying this novel algorithm to a WarpX simulation. -->
+
+<!-- ## **Background** -->
+
+<!-- **What is AMReX**
 
 AMReX is the block-structured adaptive mesh refinement (AMR) software framework for solving partial differential
 equations (PDEs).
 
 • AMR is a common cause of load imbalance during simulations. Multi-level meshes lead to complex load distributions that require careful balancing to obtain optimal runtime.
 
-• AMReX provides the necessary tools to manage and optimize computational meshes, particles, parallel processing, input/output, and visualization for high-performance simulations.
+• AMReX provides the necessary tools to manage and optimize computational meshes, particles, parallel processing, input/output, and visualization for high-performance simulations. -->
 
 
-
+<!-- 
 **What is Load Balancing**
 
 • Load balancing is a process of distributing computational tasks evenly across available processors or nodes to maximize   efficiency and minimize idle time.
@@ -24,36 +33,51 @@ equations (PDEs).
 • AMReX provides Space-filling curve and Knapsack load balancing algorithms.
 
 
-![alt text](./result/perlmutter.png)
+![alt text](./result/perlmutter.png) -->
 
 ## **Folder Structure**
 
 ```
 PASC_2025_Paper_Artifact
 │
-└─── notebooks
+└─── notebooks                               <- jupyter-notebooks to plot all the obtained outputs         
 │        │ 
-│        └───metrics_calculation_avg.ipynb
+│        └───metrics_calculation_avg.ipynb           
 │        └───metrics_calculation_best.ipynb
 │        └───metrics_calculation_worst.ipynb
-│        └───sfc_knapsack_plot.py
-└───output
-└───result
+│        └───requirements.yaml
+│        └───README.md
+│
+└───output                                   <- this directory stores all the outputs (run_100 and run_250 
+│                                               are no of times we ran the optimized algorithms.)                            
+│       │ 
+│       └─── bruteforce
+│       └─── run_100
+│       └─── run_250
+│
+└───result                                   <- this directory stores all the analysis plots  
+│
 └───src
 │    │ 
-│    └───bruteForce.cpp
-│    └───SFC.cpp/SFC.H
-│    └───SFC_knapsack.cpp/SFC_knapsack.H
-│    └───Knapsack.cpp/Knapsack.H
-│    └───PainterPartition.cpp/PainterPartition.H
-│    └───main.cpp 
-│    └───Make.package  
-│    └───GNUmakefile   
+│    └───bruteForce                          <-  bruteforce experimentation     
+│    │      │ 
+│    │      └───bruteForce.cpp
+│    │      └───bruteforce_experiment.sh
+│    │  
+│    └───optimized_algorithm                  <- existing and developed dynamic load balancing algorithms
+│           │ 
+│           └───SFC.cpp/SFC.H
+│           └───SFC_knapsack.cpp/SFC_knapsack.H
+│           └───Knapsack.cpp/Knapsack.H
+│           └───PainterPartition.cpp/PainterPartition.H
+│           └───main.cpp
+│           └───Make.package
+│           └───GNUmakefile 
+│           └───experiment.sh
+│           └───run.sh
+│           └───inputs  
 │     
 └───LICENSE
-└───experiment.sh
-└───inputs
-└───requirements.yaml
 └───README.md
     
 ```
@@ -94,22 +118,39 @@ These instructions will get you a copy of the project up and running on your loc
 
    https://amrex-codes.github.io/amrex/docs_html/BuildingAMReX_Chapter.html
 
-3. For running the python files and notebooks create a conda environemnt using this file.
-   ```
-   conda env create -f requirements.yaml
+   Clone this repository to the working directory
 
    ```
-### **Build Instructions**
-
-1. Navigate to the Repository Root:
+   git clone https://github.com/AMReX-Codes/amrex.git
 
    ```
-   cd /path/to/PASC_2025_Paper_Artifact
+   This repository includes all ```amrex``` functionalities required to run our test-cases. So modify the ```GNUmakefile``` accordingly. Change the ```AMREX_HOME``` path to the correct path of cloned ```amrex``` repository. 
+
+   ```
+   AMREX_HOME ?= ../../../amrex
+
+   ```
+
+### **Build Instructions for bruteforce algorithm**
+
+1. Navigate to the ```bruteForce``` directory
+
+   ```
+   CC bruteForce.cpp -o bf -fopenmp
+
+   ```
+
+### **Build Instructions for optimized algorithms**
+
+1. Navigate to the ```optimized_algorithms``` directory
+
+   ```
+   cd /path/to/PASC_2025_Paper_Artifact/src/optimized_algorithms/
 
    ```
 2. Configure the Makefile:
 
-   Ensure your Make.package file includes the correct paths to AMReX headers and libraries also all files headers and sources. 
+   Ensure your ```Make.package``` file includes the correct paths to ```AMReX``` headers and libraries also all files headers and sources. 
 
 3. Compile the Code:
 
@@ -117,7 +158,7 @@ These instructions will get you a copy of the project up and running on your loc
    make -j 
 
    ```
-   This will generate the executable main3d.gnu.x86-milan.TPROF.ex 
+   This will generate the executable ```main3d.gnu.x86-milan.TPROF.ex ```
 
 ### **Run Instructions**
 
@@ -146,7 +187,7 @@ These instructions will get you a copy of the project up and running on your loc
    ```
 
 
-## **Contributing**
+<!-- ## **Contributing**
 
 1. Fork the Repository:
 
@@ -181,7 +222,7 @@ These instructions will get you a copy of the project up and running on your loc
    ```
    git push origin feature/YourFeatureName
 
-   ```
+   ``` -->
 
 ## **License**
 

@@ -1,0 +1,9 @@
+# Ignore the generated executable file
+
+*.ex
+
+*bf
+
+# Ignore the temporary build directory
+
+**/tmp_build_dir/
